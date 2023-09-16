@@ -22,6 +22,10 @@ services:
       - 27017:27017
   app:
     image: ${DOCKER_REGISTRY-}app
+    depends_on:
+    - mysql
+    - mongo
+    restart: on-failure
     build:
       context: .
       dockerfile: ../App/Dockerfile
@@ -29,6 +33,3 @@ services:
       - 7040:443
     environment:
       - ASPNETCORE_URLS=https://+:443;
-    depends_on:
-        - mysql
-        - mongo

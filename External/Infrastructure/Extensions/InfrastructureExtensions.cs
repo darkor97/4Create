@@ -17,7 +17,7 @@ namespace Infrastructure.DependencyExtension
             {
                 var conString = Configuration.GetConnectionString("MySqlConnectionString");
                 options
-                    .UseMySql(conString, ServerVersion.AutoDetect(conString), options => options.EnableRetryOnFailure())
+                    .UseMySql(conString, ServerVersion.AutoDetect(conString), options => options.EnableRetryOnFailure(5, TimeSpan.FromSeconds(15), null))
                     .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
             });
 
