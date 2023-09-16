@@ -1,0 +1,34 @@
+version: '3.4'
+
+name: 4create
+
+services:
+  mysql:
+    image: mysql
+    ports: 
+      - 3306:3306
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: "Password@1234"
+      MYSQL_DATABASE: "db"
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: "root"
+      MONGO_INITDB_ROOT_PASSWORD: "Password@1234"
+      MONGO_INITDB_DATABASE: "db"
+    ports:
+      - 27017:27017
+  app:
+    image: ${DOCKER_REGISTRY-}app
+    build:
+      context: .
+      dockerfile: ../App/Dockerfile
+    ports:
+      - 7040:443
+    environment:
+      - ASPNETCORE_URLS=https://+:443;
+    depends_on:
+        - mysql
+        - mongo

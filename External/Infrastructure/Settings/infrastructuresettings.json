@@ -1,0 +1,15 @@
+{
+  "ConnectionStrings": {
+    "MySqlConnectionString": "server=mysql;Port=3306;uid=root;pwd=Password@1234;database=db",
+    "MigrationConnectionString": "server=localhost;Port=3306;uid=root;pwd=Password@1234;database=db"
+  },
+  "Serilog": {
+    "Host": "mongo",
+    "Port": "27017",
+    "AdminDatabase": "admin",
+    "Username": "root",
+    "Password": "Password@1234",
+    "Database": "db",
+    "Collection": "SystemLog"
+  }
+}
