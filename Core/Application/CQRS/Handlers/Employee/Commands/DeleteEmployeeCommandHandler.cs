@@ -1,16 +1,15 @@
-﻿using Application.CQRS.Commands;
+﻿using Application.CQRS.Commands.Employee;
 using Domain.Abstractions;
-using Domain.Entities;
 using MediatR;
 
-namespace Application.CQRS.Handlers.Commands
+namespace Application.CQRS.Handlers.Employee.Commands
 {
     public class DeleteEmployeeCommandHandler : IRequestHandler<DeleteEmployeeCommand>
     {
-        private readonly IRepository<Employee> _employeeRepository;
+        private readonly IRepository<Domain.Entities.Employee> _employeeRepository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public DeleteEmployeeCommandHandler(IRepository<Employee> employeeRepository, IUnitOfWork unitOfWork)
+        public DeleteEmployeeCommandHandler(IRepository<Domain.Entities.Employee> employeeRepository, IUnitOfWork unitOfWork)
         {
             _employeeRepository = employeeRepository;
             _unitOfWork = unitOfWork;

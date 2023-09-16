@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230914160754_Initial")]
+    [Migration("20230916155820_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -21,21 +21,6 @@ namespace Infrastructure.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "7.0.11")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
-
-            modelBuilder.Entity("CompanyEmployee", b =>
-                {
-                    b.Property<Guid>("CompaniesId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<Guid>("EmployeesId")
-                        .HasColumnType("char(36)");
-
-                    b.HasKey("CompaniesId", "EmployeesId");
-
-                    b.HasIndex("EmployeesId");
-
-                    b.ToTable("CompanyEmployee");
-                });
 
             modelBuilder.Entity("Domain.Entities.Company", b =>
                 {
@@ -54,6 +39,9 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Name")
+                        .IsUnique();
+
                     b.ToTable("Companies");
                 });
 
@@ -69,7 +57,8 @@ namespace Infrastructure.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(512)
+                        .HasColumnType("varchar(512)");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -78,56 +67,43 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("Title")
+                        .IsUnique();
+
                     b.ToTable("Employees");
                 });
 
-            modelBuilder.Entity("Infrastructure.SqlDatabase.TableConfigurations.EmployeeCompanies", b =>
+            modelBuilder.Entity("Infrastructure.SqlDatabase.TableConfigurations.EmployeeCompany", b =>
                 {
-                    b.Property<Guid>("EmployeeId")
-                        .HasColumnType("char(36)");
-
                     b.Property<Guid>("CompanyId")
                         .HasColumnType("char(36)");
 
-                    b.HasKey("EmployeeId", "CompanyId");
+                    b.Property<Guid>("EmployeeId")
+                        .HasColumnType("char(36)");
 
-                    b.HasIndex("CompanyId");
+                    b.HasKey("CompanyId", "EmployeeId");
+
+                    b.HasIndex("EmployeeId");
 
                     b.ToTable("EmployeeCompanies");
                 });
 
-            modelBuilder.Entity("CompanyEmployee", b =>
+            modelBuilder.Entity("Infrastructure.SqlDatabase.TableConfigurations.EmployeeCompany", b =>
                 {
                     b.HasOne("Domain.Entities.Company", null)
-                        .WithMany()
-                        .HasForeignKey("CompaniesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.Employee", null)
-                        .WithMany()
-                        .HasForeignKey("EmployeesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Infrastructure.SqlDatabase.TableConfigurations.EmployeeCompanies", b =>
-                {
-                    b.HasOne("Domain.Entities.Company", "Company")
                         .WithMany()
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.Employee", "Emplyoee")
+                    b.HasOne("Domain.Entities.Employee", null)
                         .WithMany()
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Company");
-
-                    b.Navigation("Emplyoee");
                 });
 #pragma warning restore 612, 618
         }

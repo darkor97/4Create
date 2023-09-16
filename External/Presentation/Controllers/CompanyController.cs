@@ -1,4 +1,6 @@
-﻿using Application.CQRS.Commands.Employee;
+﻿using Application.CQRS.Commands.Company;
+using AutoMapper;
+using DnsClient.Internal;
 using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -7,26 +9,27 @@ using MongoDB.Bson;
 using Presentation.Extensions;
 using Presentation.Models;
 using static Microsoft.AspNetCore.Http.StatusCodes;
-
 namespace Presentation.Controllers
 {
-    [Route("employee")]
-    public class EmployeeController : ControllerBase
+    [Route("company")]
+    public class CompanyController : ControllerBase
     {
         private readonly ISender _sender;
-        private readonly ILogger<EmployeeController> _logger;
+        private readonly IMapper _mapper;
+        private readonly ILogger<Company> _logger;
 
-        public EmployeeController(ISender sender, ILogger<EmployeeController> logger)
+        public CompanyController(ISender sender, IMapper mapper, ILogger<Company> logger)
         {
             _sender = sender;
+            _mapper = mapper;
             _logger = logger;
         }
 
         [HttpPost]
         [Route("create")]
-        public async Task<IActionResult> CreateAsync([FromBody] EmployeeRequest employeeRequest)
+        public async Task<IActionResult> CreateAsync([FromBody] CompanyRequest companyRequest)
         {
-            var command = new CreateEmployeeCommand(employeeRequest.Title, employeeRequest.Email);
+            var command = new CreateCompanyCommand(companyRequest.Name, _mapper.Map<IEnumerable<Employee>>(companyRequest.Employees));
 
             try
             {
@@ -42,11 +45,11 @@ namespace Presentation.Controllers
                 Comment = "Test create",
                 CreatedAt = DateTime.UtcNow,
                 Event = Domain.Enums.Event.Create,
-                ResourceType = Domain.Enums.ResourceType.Employee,
-                ChangeSet = new[] { employeeRequest }
+                ResourceType = Domain.Enums.ResourceType.Company,
+                ChangeSet = new[] { companyRequest }
             }.ToJson());
 
-            return StatusCode(Status200OK, "Employee created successfully");
+            return StatusCode(Status200OK, "Company created successfully");
         }
     }
 }

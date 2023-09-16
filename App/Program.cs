@@ -2,6 +2,7 @@ using Application.Extensions;
 using Infrastructure.DependencyExtension;
 using Infrastructure.SqlDatabase;
 using Presentation;
+using Presentation.Extensions;
 using Serilog;
 using static Infrastructure.SerilogConfig.SerilogConfig;
 
@@ -17,6 +18,7 @@ builder.Services.AddSwaggerGen();
 builder.Host.AddSerilog();
 
 builder.Services.RegisterInfrastructureDependencies();
+builder.Services.RegisterPresentationDependencies();
 builder.Services.AddControllers().AddApplicationPart(typeof(PresentationAssembly).Assembly);
 
 builder.Services.AddMediatR();

@@ -16,12 +16,18 @@ namespace Infrastructure.DependencyExtension
             services.AddDbContext<AppDbContext>(options =>
             {
                 var conString = Configuration.GetConnectionString("MySqlConnectionString");
+
+                if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("Migration")))
+                {
+                    conString = Configuration.GetConnectionString("MigrationConnectionString");
+                }
                 options
                     .UseMySql(conString, ServerVersion.AutoDetect(conString), options => options.EnableRetryOnFailure(5, TimeSpan.FromSeconds(15), null))
                     .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
             });
 
             services.AddTransient<IRepository<Employee>, EmployeeRepository>();
+            services.AddTransient<IRepository<Company>, CompanyRepository>();
             services.AddTransient<IUnitOfWork, UnitOfWork.UnitOfWork>();
         }
     }

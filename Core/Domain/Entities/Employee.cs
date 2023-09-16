@@ -8,6 +8,6 @@ namespace Domain.Entities
         public required string Email { get; set; }
         public DateTime CreatedAt { get; set; }
 
-        public IList<Company>? Companies { get; }
+        public IList<Company>? Companies { get; set; }
     }
 }

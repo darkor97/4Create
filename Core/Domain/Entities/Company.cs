@@ -5,6 +5,6 @@
         public required string Name { get; set; }
         public DateTime CreatedAt { get; set; }
 
-        public IList<Employee>? Employees { get; }
+        public IList<Employee>? Employees { get; set; }
     }
 }
