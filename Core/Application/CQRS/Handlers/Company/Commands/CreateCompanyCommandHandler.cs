@@ -28,30 +28,33 @@ namespace Application.CQRS.Handlers.Company.Commands
 
         public async Task<Domain.Entities.Company> Handle(CreateCompanyCommand request, CancellationToken cancellationToken)
         {
-            var employeesToCreate = request.Employees.Where(y => y.Id != Guid.Empty);
-            foreach (var employee in employeesToCreate)
-            {
-                await _employeeRepository.CreateAsync(new Domain.Entities.Employee() { Email = employee.Email, Title = employee.Title });
-            }
-
-            _logger.LogInformation("{@SystemLog}", new SystemLog()
-            {
-                Event = Event.Create,
-                ResourceType = ResourceType.Employee,
-                Comment = "Employee create on company create",
-                CreatedAt = DateTime.UtcNow,
-                ChangeSet = new[] { request.Employees }
-            });
-
+            var employeesToCreate = request.Employees.Where(y => y.Id == Guid.Empty).ToList();
             var company = new Domain.Entities.Company()
             {
                 Name = request.Name,
-                Employees = (IList<Domain.Entities.Employee>)request.Employees
+                Employees = employeesToCreate
             };
+
+            foreach (var existingEmployee in request.Employees.Except(employeesToCreate!))
+            {
+                var employee = await _employeeRepository.GetAsync(existingEmployee.Id);
+                company.Employees?.Add(employee!);
+            }
 
             await _companyRepository.CreateAsync(company);
             await _unitOfWork.SaveChangesAsync();
 
+            if (employeesToCreate?.Any() == true)
+            {
+                _logger.LogInformation("{@SystemLog}", new SystemLog()
+                {
+                    Event = Event.Create,
+                    ResourceType = ResourceType.Employee,
+                    Comment = "Employee create on company create",
+                    CreatedAt = DateTime.UtcNow,
+                    ChangeSet = new[] { company.Employees.Where(x => employeesToCreate.Any(y => y.Email == x.Email)).ToList() }
+                });
+            }
             _logger.LogInformation("{@SystemLog}", new SystemLog()
             {
                 Event = Event.Create,

@@ -21,17 +21,22 @@ namespace Infrastructure.Repository
 
         public async Task DeleteAsync(Employee entity)
         {
-            await Task.Run(() => _dbContext.Employees.Remove(entity));
+            var employee = await _dbContext.Employees.Include(x => x.Companies).FirstOrDefaultAsync(x => x.Id == entity.Id);
+            if (employee != null)
+            {
+                employee.Companies?.Clear();
+                _dbContext.Employees.Remove(employee);
+            }
         }
 
         public async Task<IEnumerable<Employee>> GetAllAsync()
         {
-            return await _dbContext.Employees.ToListAsync();
+            return await _dbContext.Employees.Include(x => x.Companies).ToListAsync();
         }
 
         public async Task<Employee?> GetAsync(Guid id)
         {
-            return await _dbContext.Employees.FindAsync(id);
+            return await _dbContext.Employees.Include(x => x.Companies).FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task UpdateAsync(Employee entity)

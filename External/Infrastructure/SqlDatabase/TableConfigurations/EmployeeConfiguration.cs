@@ -18,10 +18,6 @@ namespace Infrastructure.SqlDatabase.TableConfigurations
                 .IsRequired();
 
             builder
-                .HasIndex(x => x.Title)
-                .IsUnique();
-
-            builder
                 .Property(x => x.Email)
                 .HasMaxLength(512)
                 .IsRequired();

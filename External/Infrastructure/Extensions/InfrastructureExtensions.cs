@@ -31,8 +31,7 @@ namespace Infrastructure.DependencyExtension
                     conString = Configuration.GetConnectionString("MigrationConnectionString");
                 }
                 options
-                    .UseMySql(conString, ServerVersion.AutoDetect(conString), options => options.EnableRetryOnFailure(5, TimeSpan.FromSeconds(15), null))
-                    .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+                    .UseMySql(conString, ServerVersion.AutoDetect(conString), options => options.EnableRetryOnFailure(5, TimeSpan.FromSeconds(15), null));
             });
 
             services.AddTransient<IRepository<Employee>, EmployeeRepository>();

@@ -21,7 +21,10 @@ builder.Services.RegisterPresentationDependencies();
 builder.Services
     .AddControllers().AddApplicationPart(typeof(PresentationAssembly).Assembly)
     .AddJsonOptions(options =>
-        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter())); ;
+    {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    });
 
 builder.Services.AddMediatR();
 
