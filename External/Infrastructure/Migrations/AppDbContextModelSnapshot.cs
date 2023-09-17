@@ -39,7 +39,7 @@ namespace Infrastructure.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Companies");
+                    b.ToTable("Companies", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Employee", b =>
@@ -70,7 +70,7 @@ namespace Infrastructure.Migrations
                     b.HasIndex("Title")
                         .IsUnique();
 
-                    b.ToTable("Employees");
+                    b.ToTable("Employees", (string)null);
                 });
 
             modelBuilder.Entity("Infrastructure.SqlDatabase.TableConfigurations.EmployeeCompany", b =>
@@ -85,7 +85,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("EmployeeId");
 
-                    b.ToTable("EmployeeCompanies");
+                    b.ToTable("EmployeeCompanies", (string)null);
                 });
 
             modelBuilder.Entity("Infrastructure.SqlDatabase.TableConfigurations.EmployeeCompany", b =>

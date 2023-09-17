@@ -4,7 +4,6 @@ using Infrastructure.SqlDatabase;
 using Presentation;
 using Presentation.Extensions;
 using Serilog;
-using static Infrastructure.SerilogConfig.SerilogConfig;
 
 var builder = WebApplication.CreateBuilder(args);
 

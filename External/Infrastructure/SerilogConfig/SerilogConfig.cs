@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
 using MongoDB.Driver;
 using Serilog;
 using Serilog.Core;
@@ -9,13 +8,7 @@ namespace Infrastructure.SerilogConfig
 {
     public static class SerilogConfig
     {
-        public static void AddSerilog(this IHostBuilder builder)
-        {
-            Log.Logger = SetupSerilog();
-            builder.UseSerilog();
-        }
-
-        private static Logger SetupSerilog()
+        internal static Logger SetupSerilog()
         {
             return new LoggerConfiguration()
                 .WriteTo.MongoDBBson(config =>
@@ -34,8 +27,8 @@ namespace Infrastructure.SerilogConfig
                     config.SetMongoDatabase(dbInstance);
                     config.SetCollectionName(configSection["Collection"]!);
                 })
-                .MinimumLevel.Error()
-                .CreateLogger();
+                .MinimumLevel.Information()
+            .CreateLogger();
         }
     }
 }
